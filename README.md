@@ -9,6 +9,8 @@ sandolab, and console-ui.
 Pure types — no runtime code beyond a handful of `event_type` string
 constants.
 
+### Browser-bridge capture surface
+
 - `ControlPlaneCapture` — the snapshot every operator app publishes onto
   `window.__controlPlaneProbe.capture()`.
 - `OperatorContextPacket` — the operator-context handshake packet the
@@ -22,6 +24,31 @@ constants.
 - `ProbePublishRegistry` — type-only handles for the
   `useControlPlaneProbePublish()` pub/sub registry. The implementation
   stays per-repo because it imports React.
+
+### Cross-component envelope contracts (v1.1.0+)
+
+Added to prevent the contract-drift class of bugs across the
+mesh / sidecar / gateway / console-ui boundary. Each module documents
+the specific drift trap it closes.
+
+- `ObservationEvent` (`envelope-observation.ts`) — mesh-owned durable
+  shape for `observation_events` rows. `event_ref` is the stable
+  UNIQUE key. Read by console-ui hooks, produced by every HMAC-signed
+  component (sitelayer, voice-tools, attention-tools, sidecar,
+  screen-capture).
+- `BrowserBridgeResearchEvent` (`envelope-browser-bridge.ts`) — sidecar
+  LOCAL-only shape. Has `event_id` (random UUID) which MUST NOT cross
+  into mesh; sidecar's `stripEventIdForMeshIngest` washes the field
+  out at the wire boundary.
+- `HMACRequestHeaders` (`envelope-hmac.ts`) — the three HTTP headers
+  (`X-Mesh-Component` / `X-Mesh-Signature` / `X-Mesh-Timestamp`) every
+  signed mesh API call must set together. Headers, not body fields —
+  earlier task drafts sketched a body-resident shape that would have
+  defeated HMAC's authenticate-before-parse property.
+
+The Go mirror in `control-plane/mesh/core/shared_envelope_types.go`
+pins these field names; control-plane CI
+(`scripts/check-shared-types-consistency.sh`) fails if the two drift.
 
 ## Install
 
