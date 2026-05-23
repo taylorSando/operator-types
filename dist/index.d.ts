@@ -16,4 +16,7 @@ export type { CaptureEnvelope, CaptureEnvelopePickedElement, CaptureEnvelopeNetw
 export { OPERATOR_EVENT_PAGE_CAPTURED, OPERATOR_EVENT_TASK_CREATED_FROM_CAPTURE, OPERATOR_EVENT_TASK_COMPLETED_FROM_CAPTURE, OPERATOR_EVENT_BUDGET_DAILY_CAPTURE_SUMMARY, OPERATOR_EVENT_UTTERANCE, OPERATOR_EVENT_PAGE_CONTEXT, KNOWN_OPERATOR_EVENT_TYPES, } from './event-types.js';
 export type { KnownOperatorEventType } from './event-types.js';
 export type { ProbePublishRegistrySnapshot, ReadProbePublishRegistryFn, UseControlPlaneProbePublishFn, GetProbePublishMetadataFn, ProbePublishRegistry, } from './probe-publish.js';
+export type { ObservationEvent, ObservationIngestRequest, ObservationSubject, } from './envelope-observation.js';
+export type { BrowserBridgeResearchEvent } from './envelope-browser-bridge.js';
+export type { HMACRequestHeaders, HMACCanonicalInput, HMACVerifiedComponent, } from './envelope-hmac.js';
 //# sourceMappingURL=index.d.ts.map

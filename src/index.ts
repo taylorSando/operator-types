@@ -55,3 +55,23 @@ export type {
   GetProbePublishMetadataFn,
   ProbePublishRegistry,
 } from './probe-publish.js';
+
+// Cross-component envelope contracts (v1.1.0) — single source of truth
+// for the mesh / sidecar / gateway / console-ui boundary types. See
+// each module for the drift trap it prevents. The control-plane CI
+// script scripts/check-shared-types-consistency.sh keeps the Go mirror
+// at mesh/core/shared_envelope_types.go aligned with these definitions.
+
+export type {
+  ObservationEvent,
+  ObservationIngestRequest,
+  ObservationSubject,
+} from './envelope-observation.js';
+
+export type { BrowserBridgeResearchEvent } from './envelope-browser-bridge.js';
+
+export type {
+  HMACRequestHeaders,
+  HMACCanonicalInput,
+  HMACVerifiedComponent,
+} from './envelope-hmac.js';
