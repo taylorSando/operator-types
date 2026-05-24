@@ -36,6 +36,16 @@ export type {
   CaptureEnvelopeProperties,
 } from './capture-envelope.js';
 
+export type {
+  OperatorTracePreset,
+  OperatorTraceStream,
+  OperatorTraceSourceKind,
+  OperatorTraceSession,
+  OperatorTraceEvent,
+  OperatorTraceCapabilities,
+  OperatorTraceGlobal,
+} from './operator-trace.js';
+
 export {
   OPERATOR_EVENT_PAGE_CAPTURED,
   OPERATOR_EVENT_TASK_CREATED_FROM_CAPTURE,

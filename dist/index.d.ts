@@ -13,6 +13,7 @@ export type { ControlPlaneCapture, ControlPlaneProbeGlobal, ControlPlaneProbeMet
 export type { OperatorContextActivity, OperatorContextOriginContext, OperatorContextActiveProject, OperatorContextPacket, OperatorContextError, } from './operator-context.js';
 export { OPERATOR_CONTEXT_READY_EVENT, OPERATOR_CONTEXT_REFRESH_EVENT, } from './operator-context.js';
 export type { CaptureEnvelope, CaptureEnvelopePickedElement, CaptureEnvelopeNetworkCapture, CaptureEnvelopeSensitivity, CaptureEnvelopeProperties, } from './capture-envelope.js';
+export type { OperatorTracePreset, OperatorTraceStream, OperatorTraceSourceKind, OperatorTraceSession, OperatorTraceEvent, OperatorTraceCapabilities, OperatorTraceGlobal, } from './operator-trace.js';
 export { OPERATOR_EVENT_PAGE_CAPTURED, OPERATOR_EVENT_TASK_CREATED_FROM_CAPTURE, OPERATOR_EVENT_TASK_COMPLETED_FROM_CAPTURE, OPERATOR_EVENT_BUDGET_DAILY_CAPTURE_SUMMARY, OPERATOR_EVENT_UTTERANCE, OPERATOR_EVENT_PAGE_CONTEXT, KNOWN_OPERATOR_EVENT_TYPES, } from './event-types.js';
 export type { KnownOperatorEventType } from './event-types.js';
 export type { ProbePublishRegistrySnapshot, ReadProbePublishRegistryFn, UseControlPlaneProbePublishFn, GetProbePublishMetadataFn, ProbePublishRegistry, } from './probe-publish.js';

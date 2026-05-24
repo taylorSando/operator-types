@@ -49,6 +49,12 @@ export interface CaptureEnvelope {
     operator_intent: string;
     /** Sensitivity tag set by the operator at capture time. */
     sensitivity: CaptureEnvelopeSensitivity;
+    /** Active attention window stamped by the operator host, when one exists. */
+    attention_window_id?: string | null;
+    /** Generation paired with attention_window_id to disambiguate close/open races. */
+    attention_window_generation?: number | null;
+    /** Active operator trace session stamped by the browser bridge, when one exists. */
+    operator_trace_id?: string | null;
 }
 /**
  * The wrapping `properties_json` shape — the envelope keyed under a
