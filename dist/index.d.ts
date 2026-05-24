@@ -19,4 +19,6 @@ export type { ProbePublishRegistrySnapshot, ReadProbePublishRegistryFn, UseContr
 export type { ObservationEvent, ObservationIngestRequest, ObservationSubject, } from './envelope-observation.js';
 export type { BrowserBridgeResearchEvent } from './envelope-browser-bridge.js';
 export type { HMACRequestHeaders, HMACCanonicalInput, HMACVerifiedComponent, } from './envelope-hmac.js';
+export type { ConceptLevel, ConceptAlias, ConceptRealizedBy, ConceptNode, ConceptEdge, ConceptNodeRegistry, } from './ontology-concept-types.js';
+export { BUILTIN_ONTOLOGY_REGISTRY, getConceptNode, conceptsByLevel, } from './ontology-concept-types.js';
 //# sourceMappingURL=index.d.ts.map

@@ -75,3 +75,22 @@ export type {
   HMACCanonicalInput,
   HMACVerifiedComponent,
 } from './envelope-hmac.js';
+
+// Typed-ontology concept registry (v1.2.0) — the L0–L2 (general) type layer
+// of the typed-ontology backbone. L3 instances live in mesh, not here.
+// Go mirror: mesh/core/shared_ontology_types.go, kept aligned by the
+// control-plane CI script scripts/check-shared-types-consistency.sh.
+export type {
+  ConceptLevel,
+  ConceptAlias,
+  ConceptRealizedBy,
+  ConceptNode,
+  ConceptEdge,
+  ConceptNodeRegistry,
+} from './ontology-concept-types.js';
+
+export {
+  BUILTIN_ONTOLOGY_REGISTRY,
+  getConceptNode,
+  conceptsByLevel,
+} from './ontology-concept-types.js';
