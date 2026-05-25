@@ -19,14 +19,10 @@
  *
  * - `utterance` — operator spoke; the utterance was transcribed
  * - `page_context` — voice surface captured the operator's current page
- *
- * ## Reserved slot — `attention_window.*` (voice-attention thread)
- *
- * The voice-attention thread will add `attention_window.opened` and
- * `attention_window.closed` event types. They MUST be added to this
- * file (not redefined per-repo) and they MUST follow the same naming
- * convention as the existing capture-side events. See the TODO marker
- * below — extend in-place; do not branch this file.
+ * - `command_detected` — voice command detector matched an utterance
+ * - `attention_window.opened` / `attention_window.closed` — bounded focus
+ *   windows used to join voice, browser, capture, and screen context
+ * - `segment` / `segment_caption` — screen segment pointers and captions
  */
 
 // Capture-side ----------------------------------------------------------
@@ -40,17 +36,11 @@ export const OPERATOR_EVENT_BUDGET_DAILY_CAPTURE_SUMMARY = 'operator.budget.dail
 
 export const OPERATOR_EVENT_UTTERANCE = 'utterance' as const;
 export const OPERATOR_EVENT_PAGE_CONTEXT = 'page_context' as const;
-
-// TODO(voice-attention): add `attention_window.opened` and
-// `attention_window.closed` constants here when the voice-attention
-// thread lands. Follow the `OPERATOR_EVENT_*` SCREAMING_SNAKE export
-// pattern + `as const` literal so the union below picks them up
-// automatically. Do not create a parallel constants file.
-// Tracking: digital-ontology/tab-to-task-implementation-plan-2026-05-22.md
-// §17 (voice-attention coordination note).
-// e.g.
-// export const OPERATOR_EVENT_ATTENTION_WINDOW_OPENED = 'attention_window.opened' as const;
-// export const OPERATOR_EVENT_ATTENTION_WINDOW_CLOSED = 'attention_window.closed' as const;
+export const OPERATOR_EVENT_COMMAND_DETECTED = 'command_detected' as const;
+export const OPERATOR_EVENT_ATTENTION_WINDOW_OPENED = 'attention_window.opened' as const;
+export const OPERATOR_EVENT_ATTENTION_WINDOW_CLOSED = 'attention_window.closed' as const;
+export const OPERATOR_EVENT_SCREEN_SEGMENT = 'segment' as const;
+export const OPERATOR_EVENT_SCREEN_SEGMENT_CAPTION = 'segment_caption' as const;
 
 // ----------------------------------------------------------------------
 
@@ -67,6 +57,11 @@ export const KNOWN_OPERATOR_EVENT_TYPES = [
   OPERATOR_EVENT_BUDGET_DAILY_CAPTURE_SUMMARY,
   OPERATOR_EVENT_UTTERANCE,
   OPERATOR_EVENT_PAGE_CONTEXT,
+  OPERATOR_EVENT_COMMAND_DETECTED,
+  OPERATOR_EVENT_ATTENTION_WINDOW_OPENED,
+  OPERATOR_EVENT_ATTENTION_WINDOW_CLOSED,
+  OPERATOR_EVENT_SCREEN_SEGMENT,
+  OPERATOR_EVENT_SCREEN_SEGMENT_CAPTION,
 ] as const;
 
 /**

@@ -8,6 +8,8 @@
  * explicit toggles, and short retention.
  */
 
+import type { OperatorTraceStandardPayload } from './operator-event-taxonomy.js';
+
 export type OperatorTracePreset =
   | 'off'
   | 'snapshot'
@@ -62,9 +64,11 @@ export interface OperatorTraceEvent {
   event_type: string;
   source_kind: OperatorTraceSourceKind;
   source_ref?: string | null;
+  span_id?: string | null;
+  parent_span_id?: string | null;
   occurred_at: string;
   severity?: 'debug' | 'info' | 'warn' | 'error';
-  payload: Record<string, unknown>;
+  payload: OperatorTraceStandardPayload;
   redaction?: {
     status?: 'raw' | 'redacted' | 'summary_only';
     reason?: string;

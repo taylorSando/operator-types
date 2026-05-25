@@ -19,14 +19,10 @@
  *
  * - `utterance` — operator spoke; the utterance was transcribed
  * - `page_context` — voice surface captured the operator's current page
- *
- * ## Reserved slot — `attention_window.*` (voice-attention thread)
- *
- * The voice-attention thread will add `attention_window.opened` and
- * `attention_window.closed` event types. They MUST be added to this
- * file (not redefined per-repo) and they MUST follow the same naming
- * convention as the existing capture-side events. See the TODO marker
- * below — extend in-place; do not branch this file.
+ * - `command_detected` — voice command detector matched an utterance
+ * - `attention_window.opened` / `attention_window.closed` — bounded focus
+ *   windows used to join voice, browser, capture, and screen context
+ * - `segment` / `segment_caption` — screen segment pointers and captions
  */
 export declare const OPERATOR_EVENT_PAGE_CAPTURED: "operator.page.captured";
 export declare const OPERATOR_EVENT_TASK_CREATED_FROM_CAPTURE: "operator.task.created_from_capture";
@@ -34,13 +30,18 @@ export declare const OPERATOR_EVENT_TASK_COMPLETED_FROM_CAPTURE: "operator.task.
 export declare const OPERATOR_EVENT_BUDGET_DAILY_CAPTURE_SUMMARY: "operator.budget.daily_capture_summary";
 export declare const OPERATOR_EVENT_UTTERANCE: "utterance";
 export declare const OPERATOR_EVENT_PAGE_CONTEXT: "page_context";
+export declare const OPERATOR_EVENT_COMMAND_DETECTED: "command_detected";
+export declare const OPERATOR_EVENT_ATTENTION_WINDOW_OPENED: "attention_window.opened";
+export declare const OPERATOR_EVENT_ATTENTION_WINDOW_CLOSED: "attention_window.closed";
+export declare const OPERATOR_EVENT_SCREEN_SEGMENT: "segment";
+export declare const OPERATOR_EVENT_SCREEN_SEGMENT_CAPTION: "segment_caption";
 /**
  * The list of known event-type literals. Exported so consumers can
  * narrow on it (e.g. `eventType: KnownOperatorEventType` in handler
  * signatures). Voice-attention extensions should add to this list when
  * adding new constants above.
  */
-export declare const KNOWN_OPERATOR_EVENT_TYPES: readonly ["operator.page.captured", "operator.task.created_from_capture", "operator.task.completed_from_capture", "operator.budget.daily_capture_summary", "utterance", "page_context"];
+export declare const KNOWN_OPERATOR_EVENT_TYPES: readonly ["operator.page.captured", "operator.task.created_from_capture", "operator.task.completed_from_capture", "operator.budget.daily_capture_summary", "utterance", "page_context", "command_detected", "attention_window.opened", "attention_window.closed", "segment", "segment_caption"];
 /**
  * Union of known event-type literals. Useful for switch-exhaustiveness
  * and for tightening handler signatures.

@@ -24,6 +24,11 @@ constants.
 - `ProbePublishRegistry` — type-only handles for the
   `useControlPlaneProbePublish()` pub/sub registry. The implementation
   stays per-repo because it imports React.
+- `OperatorTraceStandardPayload` and event taxonomy constants — the
+  cross-project vocabulary for trace payloads (`project_key`, `event_class`,
+  `route_path`, `entity_kind`, `outcome`, redaction status, preset policy).
+  Project-specific event strings can remain domain-specific while sharing
+  these fields.
 
 ### Cross-component envelope contracts (v1.1.0+)
 
@@ -58,7 +63,7 @@ as a git-URL dependency:
 ```jsonc
 {
   "dependencies": {
-    "@operator/types": "github:taylorSando/operator-types#v1.0.0"
+    "@operator/types": "github:taylorSando/operator-types#v1.4.0"
   }
 }
 ```
@@ -72,7 +77,7 @@ For consumers that want zero-build resolution, point at the source
 directly:
 
 ```jsonc
-"@operator/types": "github:taylorSando/operator-types#v1.0.0"
+"@operator/types": "github:taylorSando/operator-types#v1.4.0"
 ```
 
 TypeScript projects with `moduleResolution: 'Bundler'` (vite, next,
@@ -80,11 +85,9 @@ modern setups) will pick up `src/index.ts` via the `./src` export.
 
 ## Cross-thread coordination
 
-The **voice-attention thread** will add `attention_window.opened` and
-`attention_window.closed` event-type constants in
-`src/event-types.ts`. A TODO marker in that file describes the
-extension pattern. Do not branch this file — extend in place so both
-threads stay coordinated.
+Voice, attention-window, and screen-caption event constants live in
+`src/event-types.ts`. Extend that file in place when adding stable
+observation event types; do not create per-repo parallel catalogs.
 
 ## Versioning
 

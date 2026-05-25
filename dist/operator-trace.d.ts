@@ -7,6 +7,7 @@
  * debugging/observability substrate and are gated by controlled origins,
  * explicit toggles, and short retention.
  */
+import type { OperatorTraceStandardPayload } from './operator-event-taxonomy.js';
 export type OperatorTracePreset = 'off' | 'snapshot' | 'debug-light' | 'debug-deep' | 'prod-safe' | 'local-dev';
 export type OperatorTraceStream = 'probe_snapshot' | 'route_changes' | 'xstate_transitions' | 'app_events' | 'api_requests' | 'console_errors' | 'network_summary' | 'screen_segments' | 'voice_utterances' | 'dom_snapshots';
 export type OperatorTraceSourceKind = 'browser-bridge' | 'controlled_app' | 'voice' | 'screen-capture' | 'mesh';
@@ -36,9 +37,11 @@ export interface OperatorTraceEvent {
     event_type: string;
     source_kind: OperatorTraceSourceKind;
     source_ref?: string | null;
+    span_id?: string | null;
+    parent_span_id?: string | null;
     occurred_at: string;
     severity?: 'debug' | 'info' | 'warn' | 'error';
-    payload: Record<string, unknown>;
+    payload: OperatorTraceStandardPayload;
     redaction?: {
         status?: 'raw' | 'redacted' | 'summary_only';
         reason?: string;
