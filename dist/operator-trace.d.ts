@@ -43,7 +43,7 @@ export interface OperatorTraceEvent {
     severity?: 'debug' | 'info' | 'warn' | 'error';
     payload: OperatorTraceStandardPayload;
     redaction?: {
-        status?: 'raw' | 'redacted' | 'summary_only';
+        status?: 'raw' | 'redacted' | 'summary_only' | 'pointer_only';
         reason?: string;
     };
 }
