@@ -45,9 +45,20 @@ export type OperatorEventClass =
   | 'diagnostic';
 
 export type OperatorEventOutcome =
+  | 'requested'
   | 'started'
   | 'succeeded'
   | 'failed'
+  | 'blocked'
+  | 'conflict'
+  | 'stale'
+  | 'retrying'
+  | 'healthy'
+  | 'degraded'
+  | 'unavailable'
+  | 'abandoned'
+  | 'completed'
+  | 'partial_failure'
   | 'cancelled'
   | 'accepted'
   | 'rejected'
@@ -62,6 +73,36 @@ export interface OperatorTraceEntityRef {
   name?: string | null;
 }
 
+export type OperatorUserStateCanonicality =
+  | 'server_authoritative'
+  | 'durable_log'
+  | 'statechart'
+  | 'url_derived'
+  | 'client_local'
+  | 'operator_probe_only';
+
+export interface OperatorUserStateSnapshot {
+  kind?: string;
+  mode?: string;
+  surface?: string;
+  intent?: string | null;
+  auth_state?: string;
+  session_state?: string;
+  workflow_state?: string;
+  entity_kind?: string;
+  entity_id?: string | number | null;
+  blocking_status?: 'none' | 'blocked' | 'degraded' | 'unknown';
+  blocking_reason?: string | null;
+  pending_count?: number;
+  error_count?: number;
+  last_success_at?: string | null;
+  last_error_at?: string | null;
+  staleness_seconds?: number;
+  confidence?: number;
+  canonicality?: OperatorUserStateCanonicality;
+  [key: string]: unknown;
+}
+
 export interface OperatorTraceStandardPayload {
   /**
    * Taxonomy version for payload-level normalization. The enclosing
@@ -69,6 +110,9 @@ export interface OperatorTraceStandardPayload {
    */
   event_schema_version?: 'operator_event_taxonomy.v1';
   project_key?: OperatorProjectKey;
+  environment?: string;
+  build_sha?: string;
+  source_surface?: string;
   event_domain?: OperatorEventDomain;
   event_class?: OperatorEventClass;
   route_path?: string;
@@ -76,10 +120,20 @@ export interface OperatorTraceStandardPayload {
   entity?: OperatorTraceEntityRef;
   entity_kind?: string;
   entity_id?: string | number | null;
+  workflow_id?: string | number | null;
+  workflow_state_before?: string;
+  workflow_state_after?: string;
+  state_version?: string | number | null;
+  session_id?: string;
+  actor_kind?: string;
+  operator_id?: string;
+  principal_id?: string | number | null;
+  acting_as?: string | number | null;
   action?: string;
   outcome?: OperatorEventOutcome;
   state_before?: string;
   state_after?: string;
+  user_state?: OperatorUserStateSnapshot;
   reason?: string;
   duration_ms?: number;
   count?: number;
@@ -87,9 +141,13 @@ export interface OperatorTraceStandardPayload {
   error_message?: string;
   summary?: string;
   attention_window_id?: string;
+  attention_window_generation?: number | string | null;
+  operator_trace_id?: string;
+  operator_trace_session_id?: string;
   capture_event_ref?: string;
   task_id?: string | number;
   redaction_status?: OperatorEventRedactionStatus;
+  retention_class?: string;
   [key: string]: unknown;
 }
 
@@ -221,13 +279,19 @@ export const OPERATOR_TRACE_REQUIRED_EVENT_FIELDS = [
 export const OPERATOR_TRACE_RECOMMENDED_PAYLOAD_FIELDS = [
   'event_schema_version',
   'project_key',
+  'environment',
+  'build_sha',
+  'source_surface',
   'event_domain',
   'event_class',
   'route_path',
   'entity_kind',
   'entity_id',
+  'workflow_id',
   'action',
   'outcome',
+  'session_id',
+  'actor_kind',
   'duration_ms',
   'redaction_status',
 ] as const;

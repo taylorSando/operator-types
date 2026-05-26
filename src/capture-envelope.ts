@@ -1,4 +1,5 @@
 import type { ControlPlaneCapture } from './control-plane-capture.js';
+import type { OperatorProjectKey, OperatorUserStateSnapshot } from './operator-event-taxonomy.js';
 import type { OperatorContextPacket } from './operator-context.js';
 
 /**
@@ -33,6 +34,16 @@ export interface CaptureEnvelope {
   captured_at: string;
   /** Browser-bridge host identifier. */
   host_id: string;
+  /** Controlled project resolved from the current URL, when known. */
+  project_id?: number | null;
+  /** Stable shared project key, when known. */
+  project_key?: OperatorProjectKey | string | null;
+  /** Producer surface that created the envelope. */
+  source_surface?: string | null;
+  /** Observation event_ref for the capture/source event that created this envelope. */
+  source_observation_ref?: string | null;
+  /** Stable capture observation ref, when different from source_observation_ref. */
+  capture_event_ref?: string | null;
   /** Either a `data:image/...;base64,...` literal or a `path://...` reference. */
   screenshot_ref: string;
   /** DOM excerpt (truncated). */
@@ -59,6 +70,18 @@ export interface CaptureEnvelope {
   attention_window_generation?: number | null;
   /** Active operator trace session stamped by the browser bridge, when one exists. */
   operator_trace_id?: string | null;
+  /** Active operator trace session identifier, for producers that keep both names. */
+  operator_trace_session_id?: string | null;
+  /** Canonical current-user/workflow state snapshot, if the producer knows it. */
+  user_state?: OperatorUserStateSnapshot | null;
+  /** End-user/app principal in the controlled app, distinct from the operator. */
+  principal_id?: string | number | null;
+  /** Delegated/impersonated actor if the operator is acting as another user/entity. */
+  acting_as?: string | number | null;
+  /** Deployed app build SHA/version observed at capture time. */
+  build_sha?: string | null;
+  /** Feature flags or experiment keys active on the captured surface. */
+  feature_flags?: string[];
 }
 
 /**

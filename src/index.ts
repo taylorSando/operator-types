@@ -52,6 +52,8 @@ export type {
   OperatorEventClass,
   OperatorEventOutcome,
   OperatorEventRedactionStatus,
+  OperatorUserStateCanonicality,
+  OperatorUserStateSnapshot,
   OperatorTraceEntityRef,
   OperatorTraceStandardPayload,
   OperatorProjectEventSurface,
