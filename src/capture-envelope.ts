@@ -38,6 +38,15 @@ export interface CaptureEnvelope {
   project_id?: number | null;
   /** Stable shared project key, when known. */
   project_key?: OperatorProjectKey | string | null;
+  /**
+   * Resolved project slug the capture should attribute + dispatch to (e.g.
+   * "chess", "nhl"). Stamped by the recording analyzer (vt-session-to-tasks)
+   * from the focused window, and by the browser path from the probe. The
+   * `capture_action_executor` steerer brief inherits this onto the artifact
+   * it spawns so the task reaches the right repo/host. Distinct from
+   * `project_id`/`project_key`: this is the dispatch routing key.
+   */
+  project_hint?: string | null;
   /** Producer surface that created the envelope. */
   source_surface?: string | null;
   /** Observation event_ref for the capture/source event that created this envelope. */
