@@ -87,6 +87,23 @@ export interface CaptureEnvelope {
     build_sha?: string | null;
     /** Feature flags or experiment keys active on the captured surface. */
     feature_flags?: string[];
+    /** Producer name (e.g. "vt-snap-context", "capture-analyze"). */
+    producer?: string;
+    /** Producer version string. */
+    producer_version?: string;
+    /** Captured viewport, e.g. "1920x1080" or {width,height}. */
+    viewport?: string | {
+        width?: number;
+        height?: number;
+    } | null;
+    /** Short preview of the page's headings at capture time. */
+    headings_preview?: string[] | string | null;
+    /** Count of console/page errors observed during the capture. */
+    errors_count?: number | null;
+    /** The project-routing URL pattern that matched (capture→project binding). */
+    project_url_pattern?: string | null;
+    /** The project-routing match score for project_url_pattern. */
+    project_url_score?: number | null;
 }
 /**
  * The wrapping `properties_json` shape — the envelope keyed under a
