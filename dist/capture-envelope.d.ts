@@ -104,6 +104,12 @@ export interface CaptureEnvelope {
     project_url_pattern?: string | null;
     /** The project-routing match score for project_url_pattern. */
     project_url_score?: number | null;
+    /** Local (pre-canonical) capture event ref when distinct from capture_event_ref. */
+    capture_local_event_ref?: string | null;
+    /** Browser-path alias of `project_url_pattern` (project-routing match). */
+    capture_project_match_pattern?: string | null;
+    /** Browser-path alias of `project_url_score` (project-routing match score). */
+    capture_project_match_score?: number | null;
 }
 /**
  * The wrapping `properties_json` shape — the envelope keyed under a

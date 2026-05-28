@@ -110,6 +110,20 @@ export interface CaptureEnvelope {
   project_url_pattern?: string | null;
   /** The project-routing match score for project_url_pattern. */
   project_url_score?: number | null;
+  // --- browser-path (sidecar) enrichment fields ----------------------------
+  // Set by browser-bridge-sidecar enrichCaptureEnvelopeForSubmit() on the LIVE
+  // browser-capture path. Added to the contract 2026-05-28 (they were emitted
+  // outside it). NB DRIFT: capture_project_match_pattern/score are the browser
+  // path's alias for project_url_pattern/score (voice path) — SAME concept,
+  // two names. Both are in the contract so neither producer violates it;
+  // converging onto one name is tracked tech debt (expand/contract, since it
+  // changes live envelope data). Do not add a third spelling.
+  /** Local (pre-canonical) capture event ref when distinct from capture_event_ref. */
+  capture_local_event_ref?: string | null;
+  /** Browser-path alias of `project_url_pattern` (project-routing match). */
+  capture_project_match_pattern?: string | null;
+  /** Browser-path alias of `project_url_score` (project-routing match score). */
+  capture_project_match_score?: number | null;
 }
 
 /**
