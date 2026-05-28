@@ -91,6 +91,39 @@ export interface CaptureEnvelope {
   build_sha?: string | null;
   /** Feature flags or experiment keys active on the captured surface. */
   feature_flags?: string[];
+  // --- producer-emitted capture metadata (page/recording captures) ---------
+  // Reconciled 2026-05-28 with the Python builder (capture/lib/capture_envelope.py),
+  // which emitted these outside the contract. Optional + additive — existing
+  // consumers (learn) are unaffected; a capture conformance test now keeps the
+  // Python output ⊆ this contract so they can't drift again.
+  /** Producer name (e.g. "vt-snap-context", "capture-analyze"). */
+  producer?: string;
+  /** Producer version string. */
+  producer_version?: string;
+  /** Captured viewport, e.g. "1920x1080" or {width,height}. */
+  viewport?: string | { width?: number; height?: number } | null;
+  /** Short preview of the page's headings at capture time. */
+  headings_preview?: string[] | string | null;
+  /** Count of console/page errors observed during the capture. */
+  errors_count?: number | null;
+  /** The project-routing URL pattern that matched (capture→project binding). */
+  project_url_pattern?: string | null;
+  /** The project-routing match score for project_url_pattern. */
+  project_url_score?: number | null;
+  // --- browser-path (sidecar) enrichment fields ----------------------------
+  // Set by browser-bridge-sidecar enrichCaptureEnvelopeForSubmit() on the LIVE
+  // browser-capture path. Added to the contract 2026-05-28 (they were emitted
+  // outside it). NB DRIFT: capture_project_match_pattern/score are the browser
+  // path's alias for project_url_pattern/score (voice path) — SAME concept,
+  // two names. Both are in the contract so neither producer violates it;
+  // converging onto one name is tracked tech debt (expand/contract, since it
+  // changes live envelope data). Do not add a third spelling.
+  /** Local (pre-canonical) capture event ref when distinct from capture_event_ref. */
+  capture_local_event_ref?: string | null;
+  /** Browser-path alias of `project_url_pattern` (project-routing match). */
+  capture_project_match_pattern?: string | null;
+  /** Browser-path alias of `project_url_score` (project-routing match score). */
+  capture_project_match_score?: number | null;
 }
 
 /**

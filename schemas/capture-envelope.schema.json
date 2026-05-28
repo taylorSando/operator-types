@@ -1,0 +1,87 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://operator-types/capture-envelope.schema.json",
+  "title": "CaptureEnvelope",
+  "description": "THE single source of truth for the capture envelope persisted under properties_json.capture_envelope. All producers (capture/lib Python builder, browser-bridge-sidecar enrichCaptureEnvelopeForSubmit, the browser capture-modal) MUST validate their output against this schema. The TypeScript interface in src/capture-envelope.ts is kept in sync by a test. additionalProperties:false makes field drift a structural validation failure, not a name-only test miss: a new field must be added HERE first.",
+  "type": "object",
+  "required": ["schema_version", "url"],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "description": "Envelope schema version. The single declared version all producers emit; bumped only on a breaking change (expand/backfill/contract).",
+      "type": "string",
+      "const": "1.0"
+    },
+    "url": { "type": "string" },
+    "page_title": { "type": "string" },
+    "captured_at": { "type": "string", "description": "ISO-8601 / RFC-3339 timestamp." },
+    "host_id": { "type": "string" },
+    "project_id": { "type": ["integer", "null"] },
+    "project_key": { "type": ["string", "null"] },
+    "project_hint": { "type": ["string", "null"] },
+    "source_surface": { "type": ["string", "null"] },
+    "source_observation_ref": { "type": ["string", "null"] },
+    "capture_event_ref": { "type": ["string", "null"] },
+    "screenshot_ref": { "type": "string" },
+    "dom_excerpt": { "type": "string" },
+    "selected_text": { "type": "string" },
+    "picked_element": {
+      "type": ["object", "null"],
+      "properties": {
+        "selector": { "type": "string" },
+        "outerHTML": { "type": "string" }
+      }
+    },
+    "probe_data": { "type": ["object", "null"] },
+    "operator_context_inbound": { "type": ["object", "null"] },
+    "network_captures": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "method": { "type": "string" },
+          "url": { "type": "string" },
+          "status": { "type": "integer" },
+          "content_type": { "type": "string" }
+        }
+      }
+    },
+    "library_hints": { "type": "array", "items": { "type": "string" } },
+    "operator_intent": { "type": "string" },
+    "sensitivity": { "enum": ["internal", "private"] },
+    "attention_window_id": { "type": ["string", "null"] },
+    "attention_window_generation": { "type": ["integer", "null"] },
+    "operator_trace_id": { "type": ["string", "null"] },
+    "operator_trace_session_id": { "type": ["string", "null"] },
+    "user_state": { "type": ["object", "null"] },
+    "principal_id": { "type": ["string", "integer", "null"] },
+    "acting_as": { "type": ["string", "integer", "null"] },
+    "build_sha": { "type": ["string", "null"] },
+    "feature_flags": { "type": "array", "items": { "type": "string" } },
+    "producer": { "type": "string" },
+    "producer_version": { "type": "string" },
+    "viewport": {
+      "type": ["string", "object", "null"],
+      "properties": {
+        "width": { "type": "number" },
+        "height": { "type": "number" }
+      }
+    },
+    "headings_preview": {
+      "type": ["array", "string", "null"],
+      "items": { "type": "string" }
+    },
+    "errors_count": { "type": ["integer", "null"] },
+    "project_url_pattern": { "type": ["string", "null"] },
+    "project_url_score": { "type": ["number", "null"] },
+    "capture_local_event_ref": { "type": ["string", "null"] },
+    "capture_project_match_pattern": {
+      "type": ["string", "null"],
+      "description": "DEPRECATED ALIAS of project_url_pattern (browser path). Convergence target: drop in schema_version 2.0 after producers emit project_url_pattern."
+    },
+    "capture_project_match_score": {
+      "type": ["number", "null"],
+      "description": "DEPRECATED ALIAS of project_url_score (browser path). See capture_project_match_pattern."
+    }
+  }
+}

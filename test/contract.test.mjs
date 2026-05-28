@@ -59,3 +59,63 @@ test('controlled-project map pins project_key → repo/host', () => {
     );
   }
 });
+
+// ---------------------------------------------------------------------------
+// THE single source of truth for the capture envelope is
+// schemas/capture-envelope.schema.json. The hand-written TS interface in
+// src/capture-envelope.ts (which keeps rich cross-module types the schema can't
+// express) MUST stay field-for-field in sync with the schema, so a field added
+// to one but not the other is a build failure. Producers (capture Python,
+// sidecar JS) validate their OUTPUT against the same schema at test time.
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const __dir = path.dirname(fileURLToPath(import.meta.url));
+const SCHEMA = JSON.parse(
+  fs.readFileSync(path.join(__dir, '..', 'schemas', 'capture-envelope.schema.json'), 'utf8'),
+);
+
+// Parse the top-level field names of the CaptureEnvelope interface from the
+// built declarations (same brace-walk the producer guards use).
+function tsInterfaceFields() {
+  const text = fs.readFileSync(
+    path.join(__dir, '..', 'dist', 'capture-envelope.d.ts'),
+    'utf8',
+  );
+  const m = /interface\s+CaptureEnvelope\s*\{/.exec(text);
+  assert.ok(m, 'CaptureEnvelope interface not found');
+  let depth = 0, start = m.index + m[0].length - 1, end = start;
+  for (let i = start; i < text.length; i++) {
+    if (text[i] === '{') depth++;
+    else if (text[i] === '}' && --depth === 0) { end = i; break; }
+  }
+  const body = text.slice(start + 1, end);
+  const fields = new Set();
+  depth = 0;
+  for (const line of body.split('\n')) {
+    const fm = /^([A-Za-z_][A-Za-z0-9_]*)\??\s*:/.exec(line.trim());
+    if (depth === 0 && fm) fields.add(fm[1]);
+    depth += (line.match(/\{/g) || []).length - (line.match(/\}/g) || []).length;
+  }
+  return fields;
+}
+
+test('capture-envelope schema and TS interface are field-for-field in sync', () => {
+  const schemaFields = new Set(Object.keys(SCHEMA.properties));
+  const tsFields = tsInterfaceFields();
+  const inSchemaOnly = [...schemaFields].filter((f) => !tsFields.has(f)).sort();
+  const inTsOnly = [...tsFields].filter((f) => !schemaFields.has(f)).sort();
+  assert.deepEqual(
+    { inSchemaOnly, inTsOnly },
+    { inSchemaOnly: [], inTsOnly: [] },
+    'capture-envelope.schema.json and src/capture-envelope.ts have drifted — ' +
+      'add the field to BOTH (the schema is the source of truth).',
+  );
+});
+
+test('capture-envelope schema pins the single declared schema_version', () => {
+  assert.equal(SCHEMA.properties.schema_version.const, '1.0');
+  assert.equal(SCHEMA.additionalProperties, false, 'unknown fields must fail structurally');
+  assert.deepEqual(SCHEMA.required, ['schema_version', 'url']);
+});
