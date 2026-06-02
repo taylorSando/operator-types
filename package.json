@@ -1,7 +1,7 @@
 {
   "name": "@operator/types",
-  "version": "1.8.0",
-  "description": "Shared TypeScript types for operator-owned cross-component contracts: browser-bridge capture surface (ControlPlaneCapture, OperatorContextPacket, CaptureEnvelope), event-type catalog, and the mesh/sidecar/gateway/console-ui envelope contracts (ObservationEvent, BrowserBridgeResearchEvent, HMAC headers).",
+  "version": "1.9.0",
+  "description": "Shared TypeScript types for operator-owned cross-component contracts: browser-bridge capture surface (ControlPlaneCapture, OperatorContextPacket, CaptureEnvelope), event-type catalog, the mesh/sidecar/gateway/console-ui envelope contracts (ObservationEvent, BrowserBridgeResearchEvent, HMAC headers), and the browser-bridge WS protocol (Action/Command/ExtensionMessage).",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "type": "module",

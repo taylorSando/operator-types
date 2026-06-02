@@ -55,6 +55,33 @@ The Go mirror in `control-plane/mesh/core/shared_envelope_types.go`
 pins these field names; control-plane CI
 (`scripts/check-shared-types-consistency.sh`) fails if the two drift.
 
+### Browser-bridge WS protocol (v1.9.0+)
+
+The bidirectional WebSocket protocol between the browser-bridge Chrome
+extension and the console gateway / sidecar. Previously this lived ONLY
+in `control-plane/browser-bridge/src/protocol.ts`, and the sidecar
+hand-parsed the same wire shapes from raw JSON with no shared types — so a
+renamed field or new action drifted silently between the two ends.
+
+- `Action` (`browser-bridge-ws.ts`) — the closed union of every action
+  verb the gateway can send (`tabs.list`, `research.dispatch`,
+  `screenshot.fullpage`, …).
+- `Command` (`browser-bridge-ws.ts`) — the `action`-tagged union of the
+  per-action gateway→extension command shapes
+  (`ResearchDispatchCommand`, `ClickCommand`, …) plus the out-of-band
+  `CancelMessage`.
+- `ExtensionMessage` (`browser-bridge-ws.ts`) — the `type`-tagged union of
+  extension→gateway messages (`HelloMessage`, `HeartbeatMessage`,
+  `ResultMessage`, `CancelAckMessage`, `ResearchCompleteMessage`,
+  `ResearchProgressMessage`).
+- Result/info shapes — `TabInfo`, `ScreenshotResult`,
+  `WindowBoundsResult`, `QuerySelectorResult`, `EvaluateResult`.
+
+This module mirrors `browser-bridge/src/protocol.ts` (the extension-side
+source of truth). When that file changes, mirror the change here.
+Consumers (gateway, sidecar) adopt these types in a later coordinated
+version bump.
+
 ## Install
 
 This package is distributed as a public GitHub repo. Consumers add it

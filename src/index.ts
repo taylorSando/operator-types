@@ -114,6 +114,59 @@ export type {
 
 export type { BrowserBridgeResearchEvent } from './envelope-browser-bridge.js';
 
+// Browser-bridge bidirectional WS protocol (v1.9.0) — the SHARED type
+// contract for the extension⇄gateway/sidecar WebSocket messages. Mirrors
+// control-plane/browser-bridge/src/protocol.ts so the sidecar (which
+// hand-parses the same wire shapes) can pin types instead of re-deriving
+// them. ADDITIVE: new exports only; consumers adopt in a later version bump.
+export type {
+  Action,
+  HelloMessage,
+  HeartbeatMessage,
+  ResultMessage,
+  CancelAckMessage,
+  ResearchCompleteMessage,
+  ResearchProgressMessage,
+  ExtensionMessage,
+  CancelMessage,
+  TabsListCommand,
+  TabsCreateCommand,
+  TabsCloseCommand,
+  WindowBoundsCommand,
+  ScreenshotCommand,
+  ScreenshotEmulatedCommand,
+  QuerySelectorCommand,
+  EvaluateCommand,
+  ResearchDispatchCommand,
+  ResearchSnapshotCommand,
+  SocialPlatform,
+  SocialActionType,
+  SocialDispatchCommand,
+  SocialResultMessage,
+  ClickCommand,
+  TypeCommand,
+  ScrollCommand,
+  FindInteractiveCommand,
+  PageContentCommand,
+  PageInfoCommand,
+  NetworkCaptureCommand,
+  NetworkSnapshotCommand,
+  ConsoleCaptureCommand,
+  PerformanceMetricsCommand,
+  FullPageScreenshotCommand,
+  CookiesGetAllCommand,
+  PickerActivateCommand,
+  OperatorTraceStartCommand,
+  OperatorTraceStopCommand,
+  OperatorTraceStatusCommand,
+  Command,
+  TabInfo,
+  ScreenshotResult,
+  WindowBoundsResult,
+  QuerySelectorResult,
+  EvaluateResult,
+} from './browser-bridge-ws.js';
+
 export type {
   HMACRequestHeaders,
   HMACCanonicalInput,
