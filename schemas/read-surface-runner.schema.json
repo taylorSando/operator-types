@@ -1,0 +1,42 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://operator-types/read-surface-runner.schema.json",
+  "title": "RunnerSnapshot",
+  "description": "Stable read-surface wire shape mesh emits to console-ui for the scheduler/runner panel. DELIBERATELY NARROW: run-state + counts + last-tick only. DISTINCT from mesh's internal SchedulerStatus, which ALSO exposes scheduler internals (priority_profiles, lane_environment_pools, homeostasis). Ledger fix: those internals are kept OUT so a read panel never couples to scheduler policy. run_state + per-runner status stay OPEN strings. additionalProperties:false makes a smuggled internal a structural validation failure. The TypeScript interface in src/read-surface-runner.ts is the paired source of truth.",
+  "type": "object",
+  "required": ["run_state", "tick_running", "active_count", "total_dispatched"],
+  "additionalProperties": false,
+  "properties": {
+    "run_state": {
+      "type": "string",
+      "description": "Authority-resolved overall scheduler run-state. OPEN string."
+    },
+    "tick_running": { "type": "boolean", "description": "Whether a scheduler tick is in flight." },
+    "active_count": { "type": "integer", "description": "Currently-active (running) agents/runners." },
+    "total_dispatched": { "type": "integer", "description": "Total dispatches since start." },
+    "last_tick_dispatches": { "type": "integer" },
+    "last_tick_decisions": { "type": "integer" },
+    "last_tick_started_at": { "type": ["string", "null"] },
+    "last_tick_finished_at": { "type": ["string", "null"] },
+    "last_tick_age_ms": { "type": ["integer", "null"] },
+    "last_tick_stalled": { "type": "boolean" },
+    "runners": {
+      "type": "array",
+      "description": "Per-runner run-states (narrow projection). No priority/lane/homeostasis internals.",
+      "items": {
+        "type": "object",
+        "required": ["runner_id", "run_state"],
+        "additionalProperties": false,
+        "properties": {
+          "runner_id": { "type": "string", "description": "Runner identifier. Contract-owned key." },
+          "tool": { "type": ["string", "null"] },
+          "enabled": { "type": "boolean" },
+          "run_state": {
+            "type": "string",
+            "description": "Authority-resolved advertised run-state (idle/busy/offline/...). OPEN string."
+          }
+        }
+      }
+    }
+  }
+}

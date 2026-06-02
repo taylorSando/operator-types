@@ -1,0 +1,69 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://operator-types/dispatch-request.schema.json",
+  "title": "DispatchRequestV1",
+  "description": "THE single source of truth for the work-OUT envelope a customer/sibling project posts to the mesh authority to request dispatch of a unit of work. Outbound counterpart to capture-envelope.schema.json (inbound). The customer declares WHAT work it wants in project-relative, capability terms; the AUTHORITY alone resolves routing (class->tier->steerer workflow, claim/dispatch mode, concrete model, host). additionalProperties:false makes the strip-list structurally enforceable: a customer cannot smuggle a mesh-internal routing primitive (counsel_class, steerer_workflow_id, dispatch_mode, claim_mode), a concrete model name (requested_model), a monorepo workspace shape (affected_packages/workspaces -> use the opaque payload key), a roster literal (project_hint/source_system:'sitelayer' -> use the opaque project_key), or a callback field (use callback-claim.schema.json) — any such field is a validation failure, not a silent pass-through. The TypeScript interface in src/dispatch-request.ts mirrors this schema field-for-field (a contract test enforces sync).",
+  "type": "object",
+  "required": ["schema_version", "project_key", "intent"],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "description": "Envelope schema version. The single declared version all producers emit; bumped only on a breaking change.",
+      "type": "string",
+      "const": "1"
+    },
+    "request_id": {
+      "description": "Producer-minted idempotent request id (UUID/ULID) echoed on the callback for result->request correlation. Distinct from idempotency_key (server-side de-dupe).",
+      "type": "string"
+    },
+    "project_key": {
+      "description": "OPAQUE stable project key the authority resolves to a registered integration (data-driven via projects.url_patterns). NOT a closed-roster literal and NOT a 'sitelayer' literal. The single required routing field.",
+      "type": "string",
+      "minLength": 1
+    },
+    "intent": {
+      "description": "What the customer wants done, in its own domain vocabulary (e.g. 'daily_sync', 'generate_puzzles', 'render_batch'). The authority maps (project_key, intent) -> routing; it does not constrain the customer's task taxonomy.",
+      "type": "string",
+      "minLength": 1
+    },
+    "task_kind": {
+      "description": "Optional finer-grained kind within intent (e.g. intent='render_batch', task_kind='thumbnails'). Advisory.",
+      "type": ["string", "null"]
+    },
+    "subject": {
+      "description": "What the work is about — a project-relative pointer mesh echoes back on the callback. Opaque to mesh.",
+      "type": ["object", "null"],
+      "additionalProperties": false,
+      "required": ["type", "id"],
+      "properties": {
+        "type": { "type": "string" },
+        "id": { "type": "string" },
+        "label": { "type": ["string", "null"] }
+      }
+    },
+    "body": {
+      "description": "Free-form human-readable body / instructions for the work.",
+      "type": ["string", "null"]
+    },
+    "priority": {
+      "description": "Advisory urgency band; the authority maps it onto its own tiers. OPEN string so a producer can add a band; the authority clamps unknowns. Does NOT name a mesh queue.",
+      "type": "string"
+    },
+    "requested_capability": {
+      "description": "The CAPABILITY the work needs (e.g. 'reasoning', 'codegen') — NOT a concrete model. The authority resolves capability -> tier -> model. OPEN string by design.",
+      "type": ["string", "null"]
+    },
+    "payload": {
+      "description": "Typed-OPEN, opaque structured work inputs. Replaces the execution_context smuggle bag. Mesh passes it through to the resolved worker; it does not route on its contents. Monorepo-shaped data (workspaces / affected_packages) goes here as opaque keys if at all.",
+      "type": ["object", "null"]
+    },
+    "created_by": {
+      "description": "Who/what on the customer side authored the request (user id, service name, cron identity). Advisory provenance; not a routing key.",
+      "type": ["string", "null"]
+    },
+    "idempotency_key": {
+      "description": "Server-side de-dupe key. Two requests with the same idempotency_key for the same project_key MUST collapse to one accepted dispatch.",
+      "type": ["string", "null"]
+    }
+  }
+}

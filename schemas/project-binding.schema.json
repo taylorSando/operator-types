@@ -1,0 +1,51 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://operator-types/project-binding.schema.json",
+  "title": "ProjectBindingV1",
+  "description": "project_binding.v1 — the typed contract a project/sibling presents so the mesh authority treats it as DATA instead of a compiled ProjectRegistryEntry literal (PLAN.md principle 1). Grep-verified generic across nhl(G04), winwar(G13), qedviz(NO goal), sitelayer(NO goal) and external siblings (no mesh goal): see MAXIMAL-BREAKDOWN §5 ledger row 3. The TypeScript interface in src/project-binding.ts is kept field-for-field in sync with this schema. additionalProperties:false makes field drift a structural validation failure: a new field must be added HERE first. ONLY project_key is required — goal_anchor is OPTIONAL + opaque so projects with no mesh goal (qedviz, external siblings) still validate.",
+  "type": "object",
+  "required": ["project_key"],
+  "additionalProperties": false,
+  "properties": {
+    "project_key": {
+      "description": "Stable shared project key (e.g. nhl, winwar, qedviz, sitelayer). The authority's primary identity. Open string, NOT a closed roster union.",
+      "type": "string",
+      "minLength": 1
+    },
+    "goal_anchor": {
+      "description": "OPTIONAL + OPAQUE mesh GoalID (e.g. G04 for nhl, G13 for winwar). LOAD-BEARING: qedviz has no GoalID and external siblings have no mesh goal, so this is never required and never a closed enum of known goal ids. The authority resolves the anchor internally.",
+      "type": ["string", "null"]
+    },
+    "display_name": {
+      "description": "Human-facing label (e.g. Sitelayer, Hockeypedia). Maps to OperatorProjectEventSurface.display_name.",
+      "type": ["string", "null"]
+    },
+    "description": {
+      "description": "Longer free-form description. Maps to ProjectRegistryEntry.Description.",
+      "type": ["string", "null"]
+    },
+    "git_remote_url": {
+      "description": "Canonical git remote. Maps to ProjectRegistryEntry.GitRemoteURL. Optional (winwar registers without one). Opaque to the authority.",
+      "type": ["string", "null"]
+    },
+    "git_default_branch": {
+      "description": "Default branch of git_remote_url. FREE STRING (chess=master, most=main) — never a closed union. Maps to ProjectRegistryEntry.GitDefaultBranch.",
+      "type": ["string", "null"]
+    },
+    "repo_names": {
+      "description": "Repository slugs that belong to this project (a project may span several). Maps to OperatorProjectEventSurface.repo_names. Opaque — no monorepo/workspace structure inferred.",
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "production_hosts": {
+      "description": "Production hostnames the project serves. Maps to OperatorProjectEventSurface.production_hosts. May be empty for projects with no public surface.",
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "url_patterns": {
+      "description": "URL patterns that auto-bind a captured/narrated page to this project (project_url_resolver.go ResolveProjectFromURL). Maps to projects.url_patterns (mesh migration 294/295). Empty = no auto-binding.",
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  }
+}

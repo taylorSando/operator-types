@@ -1,0 +1,51 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://operator-types/callback-claim.schema.json",
+  "title": "CallbackClaimV1",
+  "description": "THE single source of truth for where + how mesh delivers the RESULT of a dispatched unit of work back to the requesting customer. Paired with dispatch-request.schema.json. Replaces the English-prose webhook instruction ('POST to {webhookUrl} with Bearer $SITELAYER_CHAT_WEBHOOK_TOKEN') that lived in LLM prompt builders: mesh STORES this claim and EXECUTES the callback itself, deterministically, with a mesh-minted scoped token. The token is a REFERENCE (token_ref), never a literal env-var name and never the secret value — no secret material crosses this contract. auth_scheme unifies the two divergent legacy auth shapes into one enum. additionalProperties:false. The TypeScript interface in src/callback-claim.ts mirrors this schema field-for-field (a contract test enforces sync).",
+  "type": "object",
+  "required": ["schema_version", "callback_url", "auth_scheme"],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "description": "Claim schema version. The single declared version; bumped only on a breaking change.",
+      "type": "string",
+      "const": "1"
+    },
+    "callback_url": {
+      "description": "Absolute URL mesh delivers the work result to. Required — nothing to execute without it.",
+      "type": "string",
+      "minLength": 1
+    },
+    "auth_scheme": {
+      "description": "How mesh authenticates the callback. Unifies the two legacy auth shapes; 'scoped_bearer' is the default. Required so auth is never implicit.",
+      "type": "string",
+      "enum": ["scoped_bearer", "hmac", "none"],
+      "default": "scoped_bearer"
+    },
+    "token_ref": {
+      "description": "Mesh-minted REFERENCE to the credential (key id / secret-store handle), NOT a literal env-var name and NOT the secret value. Resolved by mesh at call time. Omitted/null when auth_scheme is 'none'.",
+      "type": ["string", "null"]
+    },
+    "method": {
+      "description": "HTTP method for the callback. Defaults to 'POST'.",
+      "type": "string",
+      "default": "POST"
+    },
+    "expected_status": {
+      "description": "HTTP status codes mesh treats as successful delivery. Anything else is a failed attempt subject to retry. Defaults to [200, 201, 202, 204].",
+      "type": "array",
+      "items": { "type": "integer" },
+      "default": [200, 201, 202, 204]
+    },
+    "response_body_schema_ref": {
+      "description": "Optional reference ($id / registry key) to the JSON schema describing the expected response body, so a delivery can be validated, not just status-checked. A reference — the schema itself lives in a registry, not inline.",
+      "type": ["string", "null"]
+    },
+    "max_attempts": {
+      "description": "Maximum delivery attempts (initial try + retries) before mesh marks the callback failed. Defaults to a mesh-side policy when omitted.",
+      "type": ["integer", "null"],
+      "minimum": 1
+    }
+  }
+}

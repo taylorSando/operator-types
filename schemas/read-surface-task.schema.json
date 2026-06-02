@@ -1,0 +1,61 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://operator-types/read-surface-task.schema.json",
+  "title": "TaskDTO",
+  "description": "Stable read-surface wire shape mesh emits to console-ui for a single orchestrated task. DISTINCT from mesh's internal Task DB-row struct. Ledger fix: the raw routing_json/execution_json/result_json blob STRINGS are NOT passed through — toDTO() parses each blob into a named, optional, NARROW sub-object (routing/execution/result). additionalProperties:false makes a smuggled column or a raw blob string a structural validation failure. The TypeScript interface in src/read-surface-task.ts is the paired source of truth.",
+  "type": "object",
+  "required": [
+    "task_id",
+    "project_key",
+    "subject",
+    "state",
+    "priority",
+    "dispatch_mode",
+    "created_at",
+    "updated_at"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "task_id": { "type": "integer", "description": "Numeric task identifier. Contract-owned key." },
+    "project_key": {
+      "type": "string",
+      "description": "Authority-resolved project slug. OPEN string — resolved data-driven, not a roster union."
+    },
+    "subject": { "type": "string" },
+    "state": { "type": "string", "description": "Authority-resolved lifecycle state. OPEN string." },
+    "priority": { "type": "string", "description": "Authority-resolved priority. OPEN string." },
+    "dispatch_mode": { "type": "string", "description": "Authority-resolved dispatch mode. OPEN string." },
+    "created_at": { "type": "string", "description": "ISO-8601 created timestamp." },
+    "updated_at": { "type": "string", "description": "ISO-8601 last-updated timestamp." },
+    "routing": {
+      "type": ["object", "null"],
+      "additionalProperties": false,
+      "description": "Parsed projection of routing_json. Raw blob string NOT passed through.",
+      "properties": {
+        "lane": { "type": ["string", "null"] },
+        "routing_hint": { "type": ["string", "null"] },
+        "execution_hint": { "type": ["string", "null"] }
+      }
+    },
+    "execution": {
+      "type": ["object", "null"],
+      "additionalProperties": false,
+      "description": "Parsed projection of execution_json. Raw blob string NOT passed through.",
+      "properties": {
+        "runtime_class": { "type": ["string", "null"] },
+        "workspace_class": { "type": ["string", "null"] },
+        "claim_mode": { "type": ["string", "null"] }
+      }
+    },
+    "result": {
+      "type": ["object", "null"],
+      "additionalProperties": false,
+      "description": "Parsed projection of result_json. Raw blob string NOT passed through.",
+      "properties": {
+        "summary": { "type": ["string", "null"] },
+        "artifact_count": { "type": ["integer", "null"] },
+        "worker": { "type": ["string", "null"] }
+      }
+    }
+  }
+}

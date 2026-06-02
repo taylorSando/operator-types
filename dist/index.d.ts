@@ -25,4 +25,11 @@ export type { Action, HelloMessage, HeartbeatMessage, ResultMessage, CancelAckMe
 export type { HMACRequestHeaders, HMACCanonicalInput, HMACVerifiedComponent, } from './envelope-hmac.js';
 export type { ConceptLevel, ConceptAlias, ConceptRealizedBy, ConceptNode, ConceptEdge, ConceptNodeRegistry, } from './ontology-concept-types.js';
 export { BUILTIN_ONTOLOGY_REGISTRY, getConceptNode, conceptsByLevel, } from './ontology-concept-types.js';
+export type { DispatchCapability, DispatchPriority, DispatchSubject, DispatchPayload, DispatchRequestV1, } from './dispatch-request.js';
+export type { CallbackAuthScheme, CallbackMethod, CallbackClaimV1, } from './callback-claim.js';
+export type { ProjectBindingSchemaVersion, ProjectBindingV1, ProjectBindingDocumentV1, } from './project-binding.js';
+export type { GoalDTO, GoalDTODetail } from './read-surface-goal.js';
+export type { TaskRoutingDTO, TaskExecutionDTO, TaskResultDTO, TaskDTO, } from './read-surface-task.js';
+export type { DbHealthPool, DbHealthSummary } from './read-surface-db-health.js';
+export type { RunnerStateEntry, RunnerSnapshot } from './read-surface-runner.js';
 //# sourceMappingURL=index.d.ts.map
