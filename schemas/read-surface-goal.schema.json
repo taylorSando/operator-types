@@ -1,0 +1,28 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://operator-types/read-surface-goal.schema.json",
+  "title": "GoalDTO",
+  "description": "Stable read-surface wire shape mesh emits to console-ui for a single goal. DISTINCT from mesh's internal GoalRow DB-row struct (whose json tags are Postgres column names). Per the genericity ledger: the base DTO keeps flywheel aggregates (proposals / workflow_attention) OUT — those live in GoalDTODetail as optional detail only. additionalProperties:false makes a smuggled field a structural validation failure. The TypeScript interface in src/read-surface-goal.ts is the paired source of truth.",
+  "type": "object",
+  "required": ["goal_id", "title", "status", "progress_pct", "updated_at"],
+  "additionalProperties": false,
+  "properties": {
+    "goal_id": { "type": "string", "description": "Stable goal identifier (e.g. G04). Contract-owned key." },
+    "title": { "type": "string" },
+    "status": {
+      "type": "string",
+      "description": "Authority-resolved lifecycle status. OPEN string; do not enumerate."
+    },
+    "progress_pct": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 100,
+      "description": "Canonical completion percentage in [0,100]. Normalized at toDTO()."
+    },
+    "time_horizon": {
+      "type": ["string", "null"],
+      "description": "Authority-resolved planning horizon (delivery/evergreen/maintenance/...). OPEN + OPTIONAL."
+    },
+    "updated_at": { "type": "string", "description": "ISO-8601 timestamp the goal row was last updated." }
+  }
+}

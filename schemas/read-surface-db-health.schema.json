@@ -1,0 +1,43 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://operator-types/read-surface-db-health.schema.json",
+  "title": "DbHealthSummary",
+  "description": "Stable read-surface wire shape mesh emits to console-ui for the Postgres/storage health panel. DISTINCT from mesh's internal map[string]any db-health rollup, which duplicates the pool map under both 'pools' and 'postgres_pools'. Ledger fix: this DTO CANONICALIZES onto a single typed 'pools' array, killing console-ui's 'postgres_pools || pools' OR-fallback. Per-pool entries are typed (pool_name/in_use/idle/...); tier+status stay OPEN strings. additionalProperties:false makes a re-introduced duplicate key a structural validation failure. The TypeScript interface in src/read-surface-db-health.ts is the paired source of truth.",
+  "type": "object",
+  "required": ["status", "pools"],
+  "additionalProperties": false,
+  "properties": {
+    "status": {
+      "type": "string",
+      "description": "Authority-resolved overall health status (ok/warning/unconfigured/...). OPEN string."
+    },
+    "summary": { "type": ["string", "null"], "description": "Authority-resolved one-line summary." },
+    "pools": {
+      "type": "array",
+      "description": "The CANONICAL typed pool array. Single key — no postgres_pools duplicate.",
+      "items": {
+        "type": "object",
+        "required": ["pool_name", "tier", "status", "in_use", "idle"],
+        "additionalProperties": false,
+        "properties": {
+          "pool_name": { "type": "string", "description": "Canonical pool identifier (fleet/local). OPEN string." },
+          "tier": { "type": "string", "description": "Authority-resolved tier. OPEN string." },
+          "status": { "type": "string", "description": "Authority-resolved pool status. OPEN string." },
+          "in_use": { "type": "integer", "description": "Connections checked out (sql.DBStats.InUse)." },
+          "idle": { "type": "integer", "description": "Connections idle in the pool (sql.DBStats.Idle)." },
+          "configured": { "type": "boolean" },
+          "shared_with_fleet": { "type": "boolean" },
+          "ping_ms": { "type": ["number", "null"] },
+          "database": { "type": ["string", "null"] },
+          "db_size_bytes": { "type": ["integer", "null"] },
+          "error": { "type": ["string", "null"] }
+        }
+      }
+    },
+    "issue_types": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Issue type tags the rollup raised (e.g. db_fleet_pool_unreachable)."
+    }
+  }
+}

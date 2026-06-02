@@ -191,3 +191,49 @@ export {
   getConceptNode,
   conceptsByLevel,
 } from './ontology-concept-types.js';
+
+// WS0 work-OUT envelopes — the outbound dispatch contract a customer/sibling
+// posts to the mesh authority + the typed result-callback claim mesh stores
+// and executes itself. Outbound counterparts to the inbound CaptureEnvelope.
+// Schema authority: schemas/{dispatch-request,callback-claim}.schema.json
+// (additionalProperties:false; a contract test keeps schema↔TS in sync).
+export type {
+  DispatchCapability,
+  DispatchPriority,
+  DispatchSubject,
+  DispatchPayload,
+  DispatchRequestV1,
+} from './dispatch-request.js';
+
+export type {
+  CallbackAuthScheme,
+  CallbackMethod,
+  CallbackClaimV1,
+} from './callback-claim.js';
+
+// WS0-B project_binding.v1 — the typed data shape a project/sibling presents
+// so the authority loads its integration as DATA instead of a compiled
+// ProjectRegistryEntry literal. goal_anchor is optional so goal-less projects
+// (qedviz, external siblings) still validate.
+export type {
+  ProjectBindingSchemaVersion,
+  ProjectBindingV1,
+  ProjectBindingDocumentV1,
+} from './project-binding.js';
+
+// WS0 read-surface DTOs — the stable wire shapes mesh emits to console-ui,
+// DISTINCT from mesh's internal DB-row structs. The toDTO() boundary projects
+// the rows onto these contract-owned field names so a column rename never
+// ripples into a consumer. Schema authority: schemas/read-surface-*.schema.json.
+export type { GoalDTO, GoalDTODetail } from './read-surface-goal.js';
+
+export type {
+  TaskRoutingDTO,
+  TaskExecutionDTO,
+  TaskResultDTO,
+  TaskDTO,
+} from './read-surface-task.js';
+
+export type { DbHealthPool, DbHealthSummary } from './read-surface-db-health.js';
+
+export type { RunnerStateEntry, RunnerSnapshot } from './read-surface-runner.js';
