@@ -7,7 +7,18 @@
  * `winwar.turn.accepted` and `sandolab.aquarium.tick` can keep their names
  * while carrying the common fields below.
  */
-export type OperatorProjectKey = 'sitelayer' | 'hockeypedia' | 'sandolab' | 'winwar' | 'chess' | 'learn' | 'browser-bridge' | 'voice-tools' | 'screen-capture';
+/**
+ * Open project-key string (v2.0.0).
+ *
+ * Previously a closed 9-name union hardcoding the customer roster inside this
+ * shared contract package. The authority now resolves projects data-driven
+ * from `projects.url_patterns` (mig 295), so the closed union was dead weight
+ * AND omitted half the registered projects. Widened to an open string so any
+ * project key (qedviz, personal-usability, …) validates without a contract
+ * bump. The companion `OPERATOR_CONTROLLED_PROJECTS` roster was removed in the
+ * same v2.0.0 release.
+ */
+export type OperatorProjectKey = string;
 export type OperatorEventDomain = 'operator' | 'browser' | 'controlled_app' | 'voice' | 'screen' | 'attention' | 'mesh';
 export type OperatorEventClass = 'lifecycle' | 'state_snapshot' | 'navigation' | 'workflow_state' | 'workflow_event' | 'user_action' | 'entity_view' | 'entity_change' | 'network_request' | 'runtime_error' | 'media_segment' | 'attention_window' | 'capture' | 'diagnostic';
 export type OperatorEventOutcome = 'requested' | 'started' | 'succeeded' | 'failed' | 'blocked' | 'conflict' | 'stale' | 'retrying' | 'healthy' | 'degraded' | 'unavailable' | 'abandoned' | 'completed' | 'partial_failure' | 'cancelled' | 'accepted' | 'rejected' | 'skipped' | 'unknown';
@@ -97,52 +108,6 @@ export interface OperatorTraceEventClassification {
     event_class: OperatorEventClass;
     default_outcome?: OperatorEventOutcome;
 }
-export declare const OPERATOR_CONTROLLED_PROJECTS: readonly [{
-    readonly project_key: "sitelayer";
-    readonly display_name: "Sitelayer";
-    readonly production_hosts: readonly ["sitelayer.com", "www.sitelayer.com"];
-    readonly repo_names: readonly ["sitelayer"];
-}, {
-    readonly project_key: "hockeypedia";
-    readonly display_name: "Hockeypedia";
-    readonly production_hosts: readonly ["hockeypedia.org", "www.hockeypedia.org"];
-    readonly repo_names: readonly ["nhl"];
-}, {
-    readonly project_key: "sandolab";
-    readonly display_name: "Sando Lab";
-    readonly production_hosts: readonly ["sandolab.xyz", "www.sandolab.xyz"];
-    readonly repo_names: readonly ["sandolab"];
-}, {
-    readonly project_key: "winwar";
-    readonly display_name: "WinWar";
-    readonly production_hosts: readonly ["winwar.sandolab.xyz"];
-    readonly repo_names: readonly ["winwar"];
-}, {
-    readonly project_key: "chess";
-    readonly display_name: "Chess";
-    readonly production_hosts: readonly ["chess.sandolab.xyz"];
-    readonly repo_names: readonly ["chess"];
-}, {
-    readonly project_key: "learn";
-    readonly display_name: "Learn";
-    readonly production_hosts: readonly ["learn.sandolab.xyz"];
-    readonly repo_names: readonly ["learn"];
-}, {
-    readonly project_key: "browser-bridge";
-    readonly display_name: "Browser Bridge";
-    readonly production_hosts: readonly [];
-    readonly repo_names: readonly ["control-plane/browser-bridge", "browser-bridge-sidecar"];
-}, {
-    readonly project_key: "voice-tools";
-    readonly display_name: "Voice Tools";
-    readonly production_hosts: readonly [];
-    readonly repo_names: readonly ["voice-tools"];
-}, {
-    readonly project_key: "screen-capture";
-    readonly display_name: "Screen Capture";
-    readonly production_hosts: readonly [];
-    readonly repo_names: readonly ["screen-capture"];
-}];
 export declare const OPERATOR_TRACE_BUILTIN_EVENT_TYPES: readonly ["probe.snapshot", "route.changed", "console.error", "console.warn", "api.request", "api.request_error"];
 export type OperatorTraceBuiltinEventType = (typeof OPERATOR_TRACE_BUILTIN_EVENT_TYPES)[number];
 export declare const OPERATOR_TRACE_BUILTIN_EVENT_CLASS: {
