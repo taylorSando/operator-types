@@ -63,8 +63,9 @@ export type {
   OperatorAppEventType,
 } from './operator-event-taxonomy.js';
 
+// v2.0.0: OPERATOR_CONTROLLED_PROJECTS removed (per-customer roster moved to
+// authority-side data resolution via projects.url_patterns, mig 295).
 export {
-  OPERATOR_CONTROLLED_PROJECTS,
   OPERATOR_TRACE_BUILTIN_EVENT_TYPES,
   OPERATOR_TRACE_BUILTIN_EVENT_CLASS,
   OPERATOR_APP_EVENT_SUFFIXES,

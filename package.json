@@ -1,6 +1,6 @@
 {
   "name": "@operator/types",
-  "version": "1.10.0",
+  "version": "2.0.0",
   "description": "Shared TypeScript types for operator-owned cross-component contracts: browser-bridge capture surface (ControlPlaneCapture, OperatorContextPacket, CaptureEnvelope), event-type catalog, the mesh/sidecar/gateway/console-ui envelope contracts (ObservationEvent, BrowserBridgeResearchEvent, HMAC headers), the browser-bridge WS protocol (Action/Command/ExtensionMessage), the work-OUT dispatch/callback contracts (DispatchRequestV1, CallbackClaimV1), the project_binding.v1 data shape (ProjectBindingV1), and the console-ui read-surface DTOs (GoalDTO, TaskDTO, DbHealthSummary, RunnerSnapshot).",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

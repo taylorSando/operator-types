@@ -19,7 +19,6 @@ import {
   OPERATOR_EVENT_SCREEN_SEGMENT,
   KNOWN_OPERATOR_EVENT_TYPES,
 } from '../dist/event-types.js';
-import { OPERATOR_CONTROLLED_PROJECTS } from '../dist/operator-event-taxonomy.js';
 
 // These exact strings are hardcoded on the mesh Go side
 // (task_completion_capture_observation.go, server_observation_events_by_window.go,
@@ -46,19 +45,11 @@ test('KNOWN_OPERATOR_EVENT_TYPES enumerates the full capture lifecycle', () => {
   }
 });
 
-// The project routing map capture project_hint resolution / host-affinity depends on.
-test('controlled-project map pins project_key → repo/host', () => {
-  const byKey = Object.fromEntries(OPERATOR_CONTROLLED_PROJECTS.map((p) => [p.project_key, p]));
-  assert.ok(byKey.hockeypedia, 'hockeypedia project missing');
-  assert.deepEqual(byKey.hockeypedia.repo_names, ['nhl']);
-  assert.ok(byKey.sitelayer, 'sitelayer project missing');
-  for (const p of OPERATOR_CONTROLLED_PROJECTS) {
-    assert.ok(
-      p.project_key && Array.isArray(p.repo_names) && Array.isArray(p.production_hosts),
-      `project entry ${p.project_key} is missing routing fields`,
-    );
-  }
-});
+// v2.0.0: the `controlled-project map pins project_key → repo/host` test was
+// removed with the OPERATOR_CONTROLLED_PROJECTS roster. The per-customer
+// project_key → repo/host mapping no longer lives in this contract package;
+// the authority resolves projects data-driven from projects.url_patterns
+// (mig 295). OperatorProjectKey is now an open string, not a frozen union.
 
 // ---------------------------------------------------------------------------
 // THE single source of truth for the capture envelope is

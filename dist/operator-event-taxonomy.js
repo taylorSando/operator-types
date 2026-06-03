@@ -7,62 +7,12 @@
  * `winwar.turn.accepted` and `sandolab.aquarium.tick` can keep their names
  * while carrying the common fields below.
  */
-export const OPERATOR_CONTROLLED_PROJECTS = [
-    {
-        project_key: 'sitelayer',
-        display_name: 'Sitelayer',
-        production_hosts: ['sitelayer.com', 'www.sitelayer.com'],
-        repo_names: ['sitelayer'],
-    },
-    {
-        project_key: 'hockeypedia',
-        display_name: 'Hockeypedia',
-        production_hosts: ['hockeypedia.org', 'www.hockeypedia.org'],
-        repo_names: ['nhl'],
-    },
-    {
-        project_key: 'sandolab',
-        display_name: 'Sando Lab',
-        production_hosts: ['sandolab.xyz', 'www.sandolab.xyz'],
-        repo_names: ['sandolab'],
-    },
-    {
-        project_key: 'winwar',
-        display_name: 'WinWar',
-        production_hosts: ['winwar.sandolab.xyz'],
-        repo_names: ['winwar'],
-    },
-    {
-        project_key: 'chess',
-        display_name: 'Chess',
-        production_hosts: ['chess.sandolab.xyz'],
-        repo_names: ['chess'],
-    },
-    {
-        project_key: 'learn',
-        display_name: 'Learn',
-        production_hosts: ['learn.sandolab.xyz'],
-        repo_names: ['learn'],
-    },
-    {
-        project_key: 'browser-bridge',
-        display_name: 'Browser Bridge',
-        production_hosts: [],
-        repo_names: ['control-plane/browser-bridge', 'browser-bridge-sidecar'],
-    },
-    {
-        project_key: 'voice-tools',
-        display_name: 'Voice Tools',
-        production_hosts: [],
-        repo_names: ['voice-tools'],
-    },
-    {
-        project_key: 'screen-capture',
-        display_name: 'Screen Capture',
-        production_hosts: [],
-        repo_names: ['screen-capture'],
-    },
-];
+// NOTE (v2.0.0): the `OPERATOR_CONTROLLED_PROJECTS` roster was removed here.
+// It hardcoded the per-customer project_key → repo/host mapping inside this
+// shared contract package. The authority resolves projects data-driven from
+// `projects.url_patterns` (mig 295), so the roster was dead weight with zero
+// external consumers. `OperatorProjectEventSurface` is retained for any
+// consumer that wants to describe a project surface ad hoc.
 export const OPERATOR_TRACE_BUILTIN_EVENT_TYPES = [
     'probe.snapshot',
     'route.changed',
